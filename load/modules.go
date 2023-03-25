@@ -19,7 +19,9 @@ var ModuleList = []iface.Module{
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	&module.Watch{List: []iface.Module{&logger.Logger{}}},
+	&module.Watch{[]iface.Module{
+		&logger.Logger{AddCaller: true},
+	}},
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
