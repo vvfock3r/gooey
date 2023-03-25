@@ -1,4 +1,4 @@
-package module
+package watch
 
 import (
 	"fmt"

@@ -2,24 +2,27 @@ package load
 
 import (
 	"gooey/iface"
-	"gooey/module"
+	"gooey/module/config"
+	"gooey/module/help"
 	"gooey/module/logger"
+	"gooey/module/version"
+	"gooey/module/watch"
 )
 
 // ModuleList 模块列表
 var ModuleList = []iface.Module{
 	// 独立的模块放在最上面
-	&module.Version{},
-	&module.Help{HiddenHelpCommand: true},
+	&version.Version{},
+	&help.Help{HiddenHelpCommand: true},
 
 	// 配置文件相关的模块
-	&module.Config{
+	&config.Config{
 		Name:      "etc/default",
 		Exts:      []string{"yaml"},
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	&module.Watch{[]iface.Module{
+	&watch.Watch{[]iface.Module{
 		&logger.Logger{AddCaller: true},
 	}},
 
