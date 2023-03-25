@@ -1,0 +1,8 @@
+settings:
+  # level:  日志级别，支持 debug,info,warn,error等
+  # format: 日志格式，支持 console,json
+  # output: 输出位置，支持 stdout,stderr 或任意文件名，多个输出使用逗号分割
+  log:
+    level: info
+    format: json
+    output: stdout
