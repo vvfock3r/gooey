@@ -9,13 +9,9 @@ import (
 
 type AutoMaxProcs struct{}
 
-func (p *AutoMaxProcs) Register(*cobra.Command) {
+func (p *AutoMaxProcs) Register(*cobra.Command) {}
 
-}
-
-func (p *AutoMaxProcs) MustCheck(*cobra.Command) {
-
-}
+func (p *AutoMaxProcs) MustCheck(*cobra.Command) {}
 
 func (p *AutoMaxProcs) Initialize(*cobra.Command) error {
 	_, err := maxprocs.Set(maxprocs.Logger(p.logFunc))
