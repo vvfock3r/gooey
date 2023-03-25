@@ -6,6 +6,8 @@
 
 Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的模板，基于[spf13/cobra](https://github.com/spf13/cobra)
 
+使用模块化设计提供非核心功能的解决方案，详细的功能可以参考内置模块
+
 ## 内置模块
 
 * Config（配置文件）：
@@ -18,7 +20,7 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
   * 支持console和json格式
   * 所有配置都支持热更新
 
-## 要求
+## 版本要求
 * Go: 1.20+
 
 ## 步骤
@@ -81,5 +83,11 @@ var ModuleList = []iface.Module{
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
 }
+```
+
+### 运行程序
+
+```bash
+$ go run .
 ```
 
