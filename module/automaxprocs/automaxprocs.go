@@ -2,8 +2,10 @@ package automaxprocs
 
 import (
 	"fmt"
+
 	"github.com/spf13/cobra"
 	"go.uber.org/automaxprocs/maxprocs"
+
 	"gooey/module/logger"
 )
 
