@@ -2,6 +2,7 @@ package load
 
 import (
 	"gooey/iface"
+	"gooey/module/automaxprocs"
 	"gooey/module/config"
 	"gooey/module/help"
 	"gooey/module/logger"
@@ -28,4 +29,5 @@ var ModuleList = []iface.Module{
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
+	&automaxprocs.AutoMaxProcs{},
 }
