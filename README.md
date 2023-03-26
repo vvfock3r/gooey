@@ -31,6 +31,10 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 
 ## 功能演示
 
+<details>
+    <summary>点击查看详情</summary>
+    <p>
+
 ```bash
 $ go run .# 1、克隆代码
 $ git clone https://github.com/vvfock3r/gooey.git
@@ -100,6 +104,9 @@ $ vim etc/default.yaml  # 修改log.level为error
 
 {"level":"error","time":"2023-03-26 19:37:49","caller":"cmd/root.go:39","message":"2023-03-26 19:37:49"}
 ```
+
+</p>
+</details>
 
 ## 目录结构
 
