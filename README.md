@@ -11,6 +11,10 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 * 提供非核心功能的解决方案，比如配置文件热加载
 * 采用模块化设计，未加载的模块不会编译到二进制文件中
 
+## 要求
+
+* Go: 1.20+
+
 ## 内置模块
 
 * Version：添加选项 -v / --version
@@ -26,8 +30,33 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
   * 所有配置都支持热更新
 * AutoMaxProcs（自动调整P的数量以更好的适用于容器运行）
 
-## 版本要求
-* Go: 1.20+
+## 目录结构
+
+```bash
+[root@ap-hongkong gooey]# tree -L 2
+.
+├── cmd
+│   └── root.go
+├── Dockerfile
+├── etc
+│   └── default.yaml
+├── go.mod
+├── go.sum
+├── iface             # 定义模块接口
+│   └── iface.go
+├── LICENSE
+├── load              # 加载的模块列表
+│   └── modules.go
+├── main.go
+├── module            # 所有的内置模块
+│   ├── automaxprocs
+│   ├── config
+│   ├── help
+│   ├── logger
+│   ├── version
+│   └── watch
+└── README.md
+```
 
 ## 功能演示
 
@@ -107,32 +136,4 @@ $ vim etc/default.yaml  # 修改log.level为error
 
 </p>
 </details>
-
-## 目录结构
-
-```bash
-[root@ap-hongkong gooey]# tree -L 2
-.
-├── cmd
-│   └── root.go
-├── Dockerfile
-├── etc
-│   └── default.yaml
-├── go.mod
-├── go.sum
-├── iface             # 定义模块接口
-│   └── iface.go
-├── LICENSE
-├── load              # 加载的模块列表
-│   └── modules.go
-├── main.go
-├── module            # 所有的内置模块
-│   ├── automaxprocs
-│   ├── config
-│   ├── help
-│   ├── logger
-│   ├── version
-│   └── watch
-└── README.md
-```
 
