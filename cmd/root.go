@@ -31,8 +31,13 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		for i := 0; i < 10000; i++ {
-			logger.Info("root")
+		for {
+			now := time.Now().Format(time.DateTime)
+			logger.Debug(now)
+			logger.Info(now)
+			logger.Warn(now)
+			logger.Error(now)
+			fmt.Println()
 			time.Sleep(time.Second)
 		}
 	},
