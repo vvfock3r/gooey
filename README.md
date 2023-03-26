@@ -101,7 +101,7 @@ $ vim etc/default.yaml  # 修改log.level为error
 ## 目录结构
 
 ```bash
-[root@ap-hongkang gooey]# tree -L 2
+[root@ap-hongkong gooey]# tree -L 2
 .
 ├── cmd
 │   └── root.go
