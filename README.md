@@ -84,16 +84,45 @@ var ModuleList = []iface.Module{
 
 # 4、测试：动态修改日志配置
 $ go run .              # 运行
-$ vim etc/default.yaml  # log.level修改为error
+$ vim etc/default.yaml  # 修改log.level为error
 
-{"Level":"info","time":"2023-03-26 19:21:37","caller":"cmd/root.go:37","message":"2023-03-26 19:21:37"}
-{"Level":"warn","time":"2023-03-26 19:21:37","caller":"cmd/root.go:38","message":"2023-03-26 19:21:37"}
-{"Level":"error","time":"2023-03-26 19:21:37","caller":"cmd/root.go:39","message":"2023-03-26 19:21:37"}
+{"level":"info","time":"2023-03-26 19:37:46","caller":"cmd/root.go:37","message":"2023-03-26 19:37:46"}
+{"level":"warn","time":"2023-03-26 19:37:46","caller":"cmd/root.go:38","message":"2023-03-26 19:37:46"}
+{"level":"error","time":"2023-03-26 19:37:46","caller":"cmd/root.go:39","message":"2023-03-26 19:37:46"}
 
-{"Level":"warn","time":"2023-03-26 19:21:37","caller":"watch/watch.go:48","message":"config update trigger","operation":"write","filename":"/root/gooey/etc/default.yaml"}
-{"Level":"error","time":"2023-03-26 19:21:38","caller":"cmd/root.go:39","message":"2023-03-26 19:21:38"}
+{"level":"warn","time":"2023-03-26 19:37:46","caller":"watch/watch.go:48","message":"config update trigger","operation":"write","filename":"/root/gooey/etc/default.yaml"}
+{"level":"error","time":"2023-03-26 19:37:47","caller":"cmd/root.go:39","message":"2023-03-26 19:37:47"}
 
-{"Level":"error","time":"2023-03-26 19:21:39","caller":"cmd/root.go:39","message":"2023-03-26 19:21:39"}
+{"level":"error","time":"2023-03-26 19:37:48","caller":"cmd/root.go:39","message":"2023-03-26 19:37:48"}
 
-{"Level":"error","time":"2023-03-26 19:21:40","caller":"cmd/root.go:39","message":"2023-03-26 19:21:40"}
+{"level":"error","time":"2023-03-26 19:37:49","caller":"cmd/root.go:39","message":"2023-03-26 19:37:49"}
 ```
+
+## 目录结构
+
+```bash
+[root@ap-hongkang gooey]# tree -L 2
+.
+├── cmd
+│   └── root.go
+├── Dockerfile
+├── etc
+│   └── default.yaml
+├── go.mod
+├── go.sum
+├── iface             # 定义模块接口
+│   └── iface.go
+├── LICENSE
+├── load              # 加载的模块列表
+│   └── modules.go
+├── main.go
+├── module            # 所有的内置模块
+│   ├── automaxprocs
+│   ├── config
+│   ├── help
+│   ├── logger
+│   ├── version
+│   └── watch
+└── README.md
+```
+
