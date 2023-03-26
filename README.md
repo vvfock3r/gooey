@@ -17,18 +17,19 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 
 ## 内置模块
 
-* Version：添加选项 -v / --version
-* Help：添加选项 -h / --help
-* Config（配置文件）：
+* version：添加选项 -v / --version
+* help：添加选项 -h / --help
+* config（配置文件）：
   * 支持多路径搜索配置文件
   * 支持命令行指定配置文件
   * 支持无配置文件模式运行
-* Watch（配置文件监控）：
+* watch（配置文件监控）：
   * 监控配置文件，并对已注册的模块进行热更新
-* Logger（日志）：
+* logger（日志）：
   * 支持console和json格式
   * 所有配置都支持热更新
-* AutoMaxProcs（自动调整P的数量以更好的适用于容器运行）
+* automaxprocs（uber开源的自动调整P的数量以更好的适用于容器运行）
+* gops（google开源的一个用于列出和诊断当前在您的系统上运行的Go进程的命令）
 
 ## 目录结构
 
