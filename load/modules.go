@@ -10,8 +10,11 @@ import (
 	"gooey/module/watch"
 )
 
-// ModuleList 模块列表
+// ModuleList 包含所有内置模块的列表
 var ModuleList = []iface.Module{
+	// 默认静默的模块
+	// &gops.Agent{},
+
 	// 独立的模块放在最上面
 	&version.Version{},
 	&help.Help{HiddenHelpCommand: true},
