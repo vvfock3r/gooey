@@ -116,7 +116,7 @@ func (l *LogConfig) _newEncoder() (zapcore.Encoder, error) {
 	zap.NewProductionEncoderConfig()
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:          "time",
-		LevelKey:         "Level",
+		LevelKey:         "level",
 		NameKey:          "logger",
 		CallerKey:        "caller",
 		FunctionKey:      zapcore.OmitKey,
