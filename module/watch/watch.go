@@ -32,11 +32,6 @@ func (w *Watch) Initialize(cmd *cobra.Command) error {
 	// config watch
 	viper.WatchConfig()
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		// keep only write events
-		if e.Op != fsnotify.Write {
-			return
-		}
-
 		// print log
 		fileName := e.Name
 		fileAbsName, err := filepath.Abs(fileName)
