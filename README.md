@@ -26,24 +26,18 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 ## 版本要求
 * Go: 1.20+
 
-## 步骤
-
-### 克隆代码
+## 功能演示
 
 ```bash
+$ go run .# 1、克隆代码
 $ git clone https://github.com/vvfock3r/gooey.git
 $ cd gooey
 $ go mod tidy
-```
 
-### 设置 Git
-
-```bash
-# 设置Git Hooks
-$ git config core.hooksPath .githooks
-
+# 2、设置Git Hooks(可选)
 # 在每次提交前会执行.githooks目录下的钩子脚本，比如
-$ git add * && git commit -m "test: git hooks" 
+$ git config core.hooksPath .githooks
+$ git add * && git commit -m "git hooks test"
 pre-commit
     RUN go mod tidy
     RUN gofmt -w -r "interface{} -> any" .
@@ -51,13 +45,9 @@ pre-commit
 [main 931a3e8] update
  1 file changed, 39 insertions(+), 232 deletions(-)
  rewrite README.md (94%)
-```
-
-### 修改配置
-
-`load/modules.go`
-
-```go
+ 
+# 3、根据实际情况修改要加载的模块
+# load/modules.go
 package load
 
 import (
@@ -91,11 +81,19 @@ var ModuleList = []iface.Module{
 	&logger.Logger{AddCaller: true},
 	&automaxprocs.AutoMaxProcs{},
 }
+
+# 4、测试：动态修改日志配置
+$ go run .              # 运行
+$ vim etc/default.yaml  # log.level修改为error
+
+{"Level":"info","time":"2023-03-26 19:21:37","caller":"cmd/root.go:37","message":"2023-03-26 19:21:37"}
+{"Level":"warn","time":"2023-03-26 19:21:37","caller":"cmd/root.go:38","message":"2023-03-26 19:21:37"}
+{"Level":"error","time":"2023-03-26 19:21:37","caller":"cmd/root.go:39","message":"2023-03-26 19:21:37"}
+
+{"Level":"warn","time":"2023-03-26 19:21:37","caller":"watch/watch.go:48","message":"config update trigger","operation":"write","filename":"/root/gooey/etc/default.yaml"}
+{"Level":"error","time":"2023-03-26 19:21:38","caller":"cmd/root.go:39","message":"2023-03-26 19:21:38"}
+
+{"Level":"error","time":"2023-03-26 19:21:39","caller":"cmd/root.go:39","message":"2023-03-26 19:21:39"}
+
+{"Level":"error","time":"2023-03-26 19:21:40","caller":"cmd/root.go:39","message":"2023-03-26 19:21:40"}
 ```
-
-### 运行程序
-
-```bash
-$ go run .
-```
-
