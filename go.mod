@@ -1,4 +1,4 @@
-module gooey
+module github.com/vvfock3r/gooey
 
 go 1.20
 

@@ -2,13 +2,13 @@ package cmd
 
 import (
 	"fmt"
-	"gooey/module/logger"
+	"github.com/vvfock3r/gooey/module/logger"
 	"os"
 	"time"
 
 	"github.com/spf13/cobra"
 
-	"gooey/load"
+	"github.com/vvfock3r/gooey/load"
 )
 
 var rootCmd = &cobra.Command{

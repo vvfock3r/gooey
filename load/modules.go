@@ -1,13 +1,13 @@
 package load
 
 import (
-	"gooey/iface"
-	"gooey/module/automaxprocs"
-	"gooey/module/config"
-	"gooey/module/help"
-	"gooey/module/logger"
-	"gooey/module/version"
-	"gooey/module/watch"
+	"github.com/vvfock3r/gooey/iface"
+	"github.com/vvfock3r/gooey/module/automaxprocs"
+	"github.com/vvfock3r/gooey/module/config"
+	"github.com/vvfock3r/gooey/module/help"
+	"github.com/vvfock3r/gooey/module/logger"
+	"github.com/vvfock3r/gooey/module/version"
+	"github.com/vvfock3r/gooey/module/watch"
 )
 
 // ModuleList 包含所有内置模块的列表

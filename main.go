@@ -1,6 +1,6 @@
 package main
 
-import "gooey/cmd"
+import "github.com/vvfock3r/gooey/cmd"
 
 func main() {
 	cmd.Execute()
