@@ -1,6 +1,4 @@
-# Gooey
-
-![Go Version](https://img.shields.io/badge/Go-1.20-blue)
+# Gooey ![Go require](https://img.shields.io/badge/Go require-1.20-blue)[![PkgGoDev](https://pkg.go.dev/badge/github.com/vvfock3r/gooey)](https://pkg.go.dev/github.com/vvfock3r/gooey) [![Go Report Card](https://goreportcard.com/badge/github.com/vvfock3r/gooey)](https://goreportcard.com/report/github.com/vvfock3r/gooey)
 
 ## 介绍
 
