@@ -7,10 +7,13 @@ settings:
     format: json
     output: stdout
 
-  mysql:
-    host: 192.168.48.151
-    port: 3306
-    username: root
-    password: QiNqg[l.%;H>>rO9
-    dbname: demo
-    charset: utf8mb4
+#  mysql:
+#    host: 192.168.48.152
+#    port: 3306
+#    username: root
+#    password: QiNqg[l.%;H>>rO9
+#    dbname: demo
+#    charset: utf8mb4
+#    conntimeout: 3s
+#    readtimeout: 3s
+#    writeTimeout: 3s

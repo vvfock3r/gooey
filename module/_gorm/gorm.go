@@ -19,6 +19,7 @@ import (
 // 2、默认参数调整
 // 3、区分MySQL和sqlite
 // 4、贼拉多
+// 该模块并没有完善，暂时不建议使用
 
 var DB *gorm.DB
 
@@ -29,12 +30,15 @@ type GORM struct {
 }
 
 type MySQLConfig struct {
-	Host     string
-	Port     int
-	Username string
-	Password string
-	DBname   string
-	Charset  string
+	Host         string
+	Port         int
+	Username     string
+	Password     string
+	DBname       string
+	Charset      string
+	Conntimeout  string
+	Readtimeout  string
+	WriteTimeout string
 }
 
 func (o *GORM) Register(*cobra.Command) {}
@@ -60,8 +64,9 @@ func (o *GORM) Initialize(cmd *cobra.Command) error {
 		return fmt.Errorf("unmarshal error: " + "settings.mysql")
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True&loc=Local&charset=%s",
-		c.Username, c.Password, c.Host, c.Port, c.DBname, c.Charset)
+	dsn := fmt.Sprintf(
+		"%s:%s@tcp(%s:%d)/%s?parseTime=True&loc=Local&charset=%s&timeout=%s&readTimeout=%s&writeTimeout=%s",
+		c.Username, c.Password, c.Host, c.Port, c.DBname, c.Charset, c.Conntimeout, c.Readtimeout, c.WriteTimeout)
 
 	// 替换默认的Logger
 	gormConfig := gorm.Config{}
