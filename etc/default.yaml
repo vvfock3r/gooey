@@ -6,3 +6,11 @@ settings:
     level: info
     format: json
     output: stdout
+
+  mysql:
+    host: 192.168.48.151
+    port: 3306
+    username: root
+    password: QiNqg[l.%;H>>rO9
+    dbname: demo
+    charset: utf8mb4

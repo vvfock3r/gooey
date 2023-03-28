@@ -26,11 +26,12 @@ var ModuleList = []iface.Module{
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	&watch.Watch{[]iface.Module{
+	&watch.Watch{List: []iface.Module{
 		&logger.Logger{AddCaller: true},
 	}},
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
 	&automaxprocs.AutoMaxProcs{},
+	//&gorm.GORM{CommandUseList: []string{"gooey"}},
 }
