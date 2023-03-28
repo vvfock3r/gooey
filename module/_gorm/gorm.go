@@ -1,11 +1,17 @@
-package gorm
+package _gorm
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
-	_gorm "gorm.io/gorm"
+	"gorm.io/gorm"
+	"moul.io/zapgorm2"
+
+	"github.com/vvfock3r/gooey/module/logger"
 )
 
 // TODO
@@ -14,11 +20,12 @@ import (
 // 3、区分MySQL和sqlite
 // 4、贼拉多
 
-var DB *_gorm.DB
+var DB *gorm.DB
 
 // GORM implement the Module interface
 type GORM struct {
-	CommandUseList []string
+	CommandUseList       []string
+	ReplaceDefaultLogger bool
 }
 
 type MySQLConfig struct {
@@ -50,19 +57,30 @@ func (o *GORM) Initialize(cmd *cobra.Command) error {
 	c := MySQLConfig{}
 	err := v.Unmarshal(&c)
 	if err != nil {
-		return fmt.Errorf("miss settings.mysql2")
+		return fmt.Errorf("unmarshal error: " + "settings.mysql")
+	}
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True&loc=Local&charset=%s",
+		c.Username, c.Password, c.Host, c.Port, c.DBname, c.Charset)
+
+	// 替换默认的Logger
+	gormConfig := gorm.Config{}
+	if o.ReplaceDefaultLogger {
+		newLogger := zapgorm2.New(zap.L())
+		newLogger.SetAsDefault()
+		gormConfig.Logger = newLogger
 	}
 
 	// 创建实例
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?parseTime=True&loc=Local&charset=%s",
-		c.Username,
-		c.Password,
-		c.Host,
-		c.Port,
-		c.DBname,
-		c.Charset)
-	DB, err = _gorm.Open(mysql.Open(dsn), &_gorm.Config{})
-	return err
+	DB, err = gorm.Open(mysql.Open(dsn), &gormConfig)
+
+	// 错误会在gorm内部输出
+	if err != nil {
+		os.Exit(1)
+	}
+	logger.Info("connect database success")
+
+	return nil
 }
 
 // inWhiteList 并非所有的命令/子命令都需要连接数据库,这里判断命令是否需要连接数据库

@@ -34,4 +34,5 @@ require (
 	golang.org/x/text v0.8.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	moul.io/zapgorm2 v1.3.0 // indirect
 )

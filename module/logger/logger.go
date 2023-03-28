@@ -68,6 +68,7 @@ func (l *LogConfig) setDefault() error {
 	}
 
 	defaultLogger = newLogger
+	_ = zap.ReplaceGlobals(defaultLogger)
 
 	return nil
 }
