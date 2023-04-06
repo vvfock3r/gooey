@@ -71,6 +71,11 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 	}
 	logger.Info("connect database success")
 
+	// 设置连接池
+	db.SetMaxOpenConns(100)
+	db.SetMaxIdleConns(10)
+	db.SetConnMaxIdleTime(time.Second * 300)
+
 	// 赋值给全局DB
 	DB = db
 
