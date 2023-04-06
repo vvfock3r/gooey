@@ -2,12 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/vvfock3r/gooey/module/_mysql"
+	"github.com/vvfock3r/gooey/module/list/_mysql"
+	"github.com/vvfock3r/gooey/module/load"
 	"os"
 
 	"github.com/spf13/cobra"
-
-	"github.com/vvfock3r/gooey/load"
 )
 
 var rootCmd = &cobra.Command{

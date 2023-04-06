@@ -32,28 +32,21 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 ## 目录结构
 
 ```bash
-[root@ap-hongkong gooey]# tree -L 2
+[root@localhost gooey]# tree -L 2
 .
 ├── cmd
 │   └── root.go
 ├── Dockerfile
 ├── etc
-│   └── default.yaml
+│   └── default.yaml # 配置文件
 ├── go.mod
 ├── go.sum
-├── iface             # 定义模块接口
-│   └── iface.go
 ├── LICENSE
-├── load              # 加载的模块列表
-│   └── modules.go
 ├── main.go
-├── module            # 所有的内置模块
-│   ├── automaxprocs
-│   ├── config
-│   ├── help
-│   ├── logger
-│   ├── version
-│   └── watch
+├── module
+│   ├── iface        # 定义模块接口
+│   ├── list         # 所有的内置模块
+│   └── load         # 加载的模块列表
 └── README.md
 ```
 
