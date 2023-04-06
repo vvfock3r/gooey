@@ -56,6 +56,7 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 		WriteTimeout:         v.GetDuration("writetimeout"),
 		CheckConnLiveness:    true,
 		AllowNativePasswords: true,
+		MaxAllowedPacket:     16 << 20, // 16 MiB
 	}
 
 	// 替换go-sql-driver/mysql内部的Logger
