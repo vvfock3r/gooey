@@ -11,7 +11,7 @@ import (
 	"go.uber.org/zap"
 
 	"github.com/vvfock3r/gooey/module/iface"
-	"github.com/vvfock3r/gooey/module/libs/logger"
+	"github.com/vvfock3r/gooey/module/item/logger"
 )
 
 // Watch implement the Module interface

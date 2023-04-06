@@ -6,7 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/vvfock3r/gooey/module/libs/mysql"
+	"github.com/vvfock3r/gooey/module/item/mysql"
 	"github.com/vvfock3r/gooey/module/load"
 )
 

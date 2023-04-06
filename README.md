@@ -45,7 +45,7 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 ├── main.go
 ├── module
 │   ├── iface        # 定义模块接口
-│   ├── libs         # 所有的内置模块
+│   ├── item         # 所有的内置模块
 │   └── load         # 加载的模块列表
 └── README.md
 ```
@@ -79,17 +79,21 @@ pre-commit
 package load
 
 import (
-	"gooey/iface"
-	"gooey/module/automaxprocs"
-	"gooey/module/config"
-	"gooey/module/help"
-	"gooey/module/logger"
-	"gooey/module/version"
-	"gooey/module/watch"
+	"github.com/vvfock3r/gooey/module/iface"
+	"github.com/vvfock3r/gooey/module/item/config"
+	"github.com/vvfock3r/gooey/module/item/help"
+	"github.com/vvfock3r/gooey/module/item/logger"
+	"github.com/vvfock3r/gooey/module/item/maxprocs"
+	"github.com/vvfock3r/gooey/module/item/mysql"
+	"github.com/vvfock3r/gooey/module/item/version"
+	"github.com/vvfock3r/gooey/module/item/watch"
 )
 
-// ModuleList 模块列表
+// ModuleList 包含所有内置模块的列表
 var ModuleList = []iface.Module{
+	// 默认静默的模块
+	// &gops.Agent{},
+
 	// 独立的模块放在最上面
 	&version.Version{},
 	&help.Help{HiddenHelpCommand: true},
@@ -101,13 +105,16 @@ var ModuleList = []iface.Module{
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	&watch.Watch{[]iface.Module{
+	&watch.Watch{List: []iface.Module{
 		&logger.Logger{AddCaller: true},
 	}},
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
 	&maxprocs.AutoMaxProcs{},
+	&mysql.MySQL{
+		AllowedCommands: []string{"gooey"},
+	},
 }
 
 # 4、测试：动态修改日志配置

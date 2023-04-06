@@ -11,7 +11,7 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/vvfock3r/gooey/module/libs/logger"
+	"github.com/vvfock3r/gooey/module/item/logger"
 )
 
 var DB *sqlx.DB
