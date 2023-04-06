@@ -1,8 +1,7 @@
-package _mysql
+package mysql
 
 import (
 	"fmt"
-	"github.com/vvfock3r/gooey/module/list/logger"
 	"os"
 	"time"
 
@@ -11,6 +10,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+
+	"github.com/vvfock3r/gooey/module/libs/logger"
 )
 
 var DB *sqlx.DB

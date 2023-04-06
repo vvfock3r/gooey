@@ -2,11 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/vvfock3r/gooey/module/list/_mysql"
-	"github.com/vvfock3r/gooey/module/load"
 	"os"
 
 	"github.com/spf13/cobra"
+
+	"github.com/vvfock3r/gooey/module/libs/mysql"
+	"github.com/vvfock3r/gooey/module/load"
 )
 
 var rootCmd = &cobra.Command{
@@ -39,7 +40,7 @@ var rootCmd = &cobra.Command{
 		//	time.Sleep(time.Second)
 		//}
 		var v string
-		_mysql.DB.Get(&v, "select @@version")
+		mysql.DB.Get(&v, "select @@version")
 		fmt.Println(v)
 	},
 }

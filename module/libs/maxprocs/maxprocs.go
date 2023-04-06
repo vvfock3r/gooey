@@ -1,11 +1,12 @@
-package automaxprocs
+package maxprocs
 
 import (
 	"fmt"
-	"github.com/vvfock3r/gooey/module/list/logger"
 
 	"github.com/spf13/cobra"
 	"go.uber.org/automaxprocs/maxprocs"
+
+	"github.com/vvfock3r/gooey/module/libs/logger"
 )
 
 type AutoMaxProcs struct{}

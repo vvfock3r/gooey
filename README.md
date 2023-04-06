@@ -45,7 +45,7 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 ├── main.go
 ├── module
 │   ├── iface        # 定义模块接口
-│   ├── list         # 所有的内置模块
+│   ├── libs         # 所有的内置模块
 │   └── load         # 加载的模块列表
 └── README.md
 ```
@@ -107,7 +107,7 @@ var ModuleList = []iface.Module{
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
-	&automaxprocs.AutoMaxProcs{},
+	&maxprocs.AutoMaxProcs{},
 }
 
 # 4、测试：动态修改日志配置

@@ -176,7 +176,7 @@ func (l *LogConfig) _newOutput() (zapcore.WriteSyncer, error) {
 
 func check() {
 	if defaultLogger == nil {
-		panic("logger not initialized, module list needs to be added")
+		panic("logger not initialized, module lib needs to be added")
 	}
 }
 

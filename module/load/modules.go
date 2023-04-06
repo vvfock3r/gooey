@@ -2,13 +2,13 @@ package load
 
 import (
 	"github.com/vvfock3r/gooey/module/iface"
-	"github.com/vvfock3r/gooey/module/list/_mysql"
-	"github.com/vvfock3r/gooey/module/list/automaxprocs"
-	"github.com/vvfock3r/gooey/module/list/config"
-	"github.com/vvfock3r/gooey/module/list/help"
-	"github.com/vvfock3r/gooey/module/list/logger"
-	"github.com/vvfock3r/gooey/module/list/version"
-	"github.com/vvfock3r/gooey/module/list/watch"
+	"github.com/vvfock3r/gooey/module/libs/config"
+	"github.com/vvfock3r/gooey/module/libs/help"
+	"github.com/vvfock3r/gooey/module/libs/logger"
+	"github.com/vvfock3r/gooey/module/libs/maxprocs"
+	"github.com/vvfock3r/gooey/module/libs/mysql"
+	"github.com/vvfock3r/gooey/module/libs/version"
+	"github.com/vvfock3r/gooey/module/libs/watch"
 )
 
 // ModuleList 包含所有内置模块的列表
@@ -33,8 +33,8 @@ var ModuleList = []iface.Module{
 
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
-	&automaxprocs.AutoMaxProcs{},
-	&_mysql.MySQL{
+	&maxprocs.AutoMaxProcs{},
+	&mysql.MySQL{
 		AllowedCommands: []string{"gooey"},
 	},
 }
