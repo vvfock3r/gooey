@@ -38,6 +38,7 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 	}
 
 	// 生成配置
+	v.SetDefault("port", "3306")
 	v.SetDefault("charset", "utf8mb4")
 	v.SetDefault("collation", "utf8mb4_general_ci")
 	mysqlConfig := mysql.Config{
