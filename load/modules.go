@@ -2,6 +2,7 @@ package load
 
 import (
 	"github.com/vvfock3r/gooey/iface"
+	"github.com/vvfock3r/gooey/module/_mysql"
 	"github.com/vvfock3r/gooey/module/automaxprocs"
 	"github.com/vvfock3r/gooey/module/config"
 	"github.com/vvfock3r/gooey/module/help"
@@ -14,10 +15,6 @@ import (
 var ModuleList = []iface.Module{
 	// 默认静默的模块
 	// &gops.Agent{},
-	//&_gorm.GORM{
-	//	CommandUseList:       []string{"gooey"},
-	//	ReplaceDefaultLogger: true,
-	//},
 
 	// 独立的模块放在最上面
 	&version.Version{},
@@ -37,4 +34,7 @@ var ModuleList = []iface.Module{
 	// 依赖于配置文件的模块放到下面
 	&logger.Logger{AddCaller: true},
 	&automaxprocs.AutoMaxProcs{},
+	&_mysql.MySQL{
+		AllowedCommands: []string{"gooey"},
+	},
 }

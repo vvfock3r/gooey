@@ -2,9 +2,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/vvfock3r/gooey/module/logger"
+	"github.com/vvfock3r/gooey/module/_mysql"
 	"os"
-	"time"
 
 	"github.com/spf13/cobra"
 
@@ -31,15 +30,18 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		for {
-			now := time.Now().Format(time.DateTime)
-			logger.Debug(now)
-			logger.Info(now)
-			logger.Warn(now)
-			logger.Error(now)
-			fmt.Println()
-			time.Sleep(time.Second)
-		}
+		//for {
+		//	now := time.Now().Format(time.DateTime)
+		//	logger.Debug(now)
+		//	logger.Info(now)
+		//	logger.Warn(now)
+		//	logger.Error(now)
+		//	fmt.Println()
+		//	time.Sleep(time.Second)
+		//}
+		var v string
+		_mysql.DB.Get(&v, "select @@version")
+		fmt.Println(v)
 	},
 }
 

@@ -4,16 +4,16 @@ settings:
   # output: 输出位置，支持 stdout,stderr 或任意文件名，多个输出使用逗号分割
   log:
     level: info
-    format: json
+    format: console
     output: stdout
-
-#  mysql:
-#    host: 192.168.48.152
-#    port: 3306
-#    username: root
-#    password: QiNqg[l.%;H>>rO9
-#    dbname: demo
-#    charset: utf8mb4
-#    conntimeout: 3s
-#    readtimeout: 3s
-#    writeTimeout: 3s
+  mysql:
+    host: 192.168.48.129
+    port: 3306
+    username: root
+    password: QiNqg[l.%;H>>rO9
+    dbname: demo
+    charset: utf8mb4
+    collation: utf8mb4_general_ci
+    conntimeout: 1s
+    readtimeout: 3s
+    writetimeout: 3s
