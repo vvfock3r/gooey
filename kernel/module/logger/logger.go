@@ -12,7 +12,7 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var defaultLogger *zap.Logger
+var DefaultLogger *zap.Logger
 
 // Logger implement the Module interface
 type Logger struct {
@@ -60,15 +60,14 @@ func (l *LogConfig) setDefault() error {
 		return err
 	}
 
-	if defaultLogger != nil {
-		_ = defaultLogger.Sync()
+	if DefaultLogger != nil {
+		_ = DefaultLogger.Sync()
 		for _, file := range l.preOutputFiles {
 			_ = file.Close()
 		}
 	}
 
-	defaultLogger = newLogger
-	_ = zap.ReplaceGlobals(defaultLogger)
+	DefaultLogger = newLogger
 
 	return nil
 }
@@ -175,42 +174,42 @@ func (l *LogConfig) _newOutput() (zapcore.WriteSyncer, error) {
 }
 
 func check() {
-	if defaultLogger == nil {
-		panic("logger not initialized, kernel lib needs to be added")
+	if DefaultLogger == nil {
+		panic("logger not initialized, logger module needs to be added")
 	}
 }
 
 func Debug(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Debug(msg, fields...)
+	DefaultLogger.Debug(msg, fields...)
 }
 
 func Info(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Info(msg, fields...)
+	DefaultLogger.Info(msg, fields...)
 }
 
 func Warn(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Warn(msg, fields...)
+	DefaultLogger.Warn(msg, fields...)
 }
 
 func Error(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Error(msg, fields...)
+	DefaultLogger.Error(msg, fields...)
 }
 
 func DPanic(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.DPanic(msg, fields...)
+	DefaultLogger.DPanic(msg, fields...)
 }
 
 func Panic(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Panic(msg, fields...)
+	DefaultLogger.Panic(msg, fields...)
 }
 
 func Fatal(msg string, fields ...zap.Field) {
 	check()
-	defaultLogger.Fatal(msg, fields...)
+	DefaultLogger.Fatal(msg, fields...)
 }

@@ -58,7 +58,7 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 	}
 
 	// 替换go-sql-driver/mysql内部的Logger
-	err := mysql.SetLogger(&mysqlLogger{logger: zap.L()})
+	err := mysql.SetLogger(&mysqlLogger{logger: logger.DefaultLogger})
 	if err != nil {
 		panic(err)
 	}

@@ -12,7 +12,7 @@ import (
 
 var rootCmd = &cobra.Command{
 	Use:           "gooey",
-	Short:         "Simple Command-Line Module Template\nFor details, please refer to https://github.com/vvfock3r/gooey",
+	Short:         "Simple Command-Line Interface Template\nFor details, please refer to https://github.com/vvfock3r/gooey",
 	SilenceUsage:  true,
 	SilenceErrors: true,
 	PersistentPreRunE: func(cmd *cobra.Command, args []string) (err error) {

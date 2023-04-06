@@ -16,25 +16,19 @@ var ModuleList = []iface.Module{
 	// 默认静默的模块
 	// &gops.Agent{},
 
-	// 独立的模块放在最上面
+	// 独立的模块放
 	&version.Version{},
 	&help.Help{HiddenHelpCommand: true},
-
-	// 配置文件相关的模块
 	&config.Config{
 		Name:      "etc/default",
 		Exts:      []string{"yaml"},
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	&watch.Watch{List: []iface.Module{
-		&logger.Logger{AddCaller: true},
-	}},
 
-	// 依赖于配置文件的模块放到下面
+	// 具有依赖关系的模块,详情可以查看模块的import部分
 	&logger.Logger{AddCaller: true},
 	&maxprocs.AutoMaxProcs{},
-	&mysql.MySQL{
-		AllowedCommands: []string{"gooey"},
-	},
+	&watch.Watch{List: []iface.Module{&logger.Logger{AddCaller: true}}},
+	&mysql.MySQL{AllowedCommands: []string{"gooey"}},
 }
