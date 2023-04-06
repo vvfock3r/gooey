@@ -10,8 +10,8 @@ import (
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 
-	"github.com/vvfock3r/gooey/module/iface"
-	"github.com/vvfock3r/gooey/module/item/logger"
+	"github.com/vvfock3r/gooey/kernel/iface"
+	"github.com/vvfock3r/gooey/kernel/module/logger"
 )
 
 // Watch implement the Module interface

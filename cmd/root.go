@@ -6,8 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/vvfock3r/gooey/module/item/mysql"
-	"github.com/vvfock3r/gooey/module/load"
+	"github.com/vvfock3r/gooey/kernel/load"
+	"github.com/vvfock3r/gooey/kernel/module/mysql"
 )
 
 var rootCmd = &cobra.Command{

@@ -43,10 +43,10 @@ Gooey是Go语言编写的一个简单的的用于快速开发命令行工具的�
 ├── go.sum
 ├── LICENSE
 ├── main.go
-├── module
+├── kernel
 │   ├── iface        # 定义模块接口
-│   ├── item         # 所有的内置模块
-│   └── load         # 加载的模块列表
+│   ├── load         # 加载的模块列表
+│   └── module       # 所有的内置模块
 └── README.md
 ```
 

@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/cobra"
 	"go.uber.org/automaxprocs/maxprocs"
 
-	"github.com/vvfock3r/gooey/module/item/logger"
+	"github.com/vvfock3r/gooey/kernel/module/logger"
 )
 
 type AutoMaxProcs struct{}

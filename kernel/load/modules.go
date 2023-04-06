@@ -1,14 +1,14 @@
 package load
 
 import (
-	"github.com/vvfock3r/gooey/module/iface"
-	"github.com/vvfock3r/gooey/module/item/config"
-	"github.com/vvfock3r/gooey/module/item/help"
-	"github.com/vvfock3r/gooey/module/item/logger"
-	"github.com/vvfock3r/gooey/module/item/maxprocs"
-	"github.com/vvfock3r/gooey/module/item/mysql"
-	"github.com/vvfock3r/gooey/module/item/version"
-	"github.com/vvfock3r/gooey/module/item/watch"
+	"github.com/vvfock3r/gooey/kernel/iface"
+	"github.com/vvfock3r/gooey/kernel/module/config"
+	"github.com/vvfock3r/gooey/kernel/module/help"
+	"github.com/vvfock3r/gooey/kernel/module/logger"
+	"github.com/vvfock3r/gooey/kernel/module/maxprocs"
+	"github.com/vvfock3r/gooey/kernel/module/mysql"
+	"github.com/vvfock3r/gooey/kernel/module/version"
+	"github.com/vvfock3r/gooey/kernel/module/watch"
 )
 
 // ModuleList 包含所有内置模块的列表
