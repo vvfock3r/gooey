@@ -12,6 +12,16 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
+// default logger
+var DefaultLogger, _ = defaultLogConfig.build()
+
+var defaultLogConfig = &LogConfig{
+	Level:     "info",
+	Format:    "console",
+	Output:    "stdout",
+	addCaller: true,
+}
+
 // Logger implement the Module interface
 type Logger struct {
 	AddFlag    bool
@@ -21,27 +31,22 @@ type Logger struct {
 
 func (l *Logger) Register(cmd *cobra.Command) {
 	var (
-		defaultLogLevelKey   = "settings.log.level"
-		defaultLogLevelValue = "debug"
-
-		defaultLogFormatKey   = "settings.log.format"
-		defaultLogFormatValue = "console"
-
-		defaultLogOutputKey   = "settings.log.output"
-		defaultLogOutputValue = "stdout"
+		defaultLogLevelKey  = "settings.log.level"
+		defaultLogFormatKey = "settings.log.format"
+		defaultLogOutputKey = "settings.log.output"
 	)
 	if !l.AddFlag {
 		// default
-		viper.SetDefault(defaultLogLevelKey, defaultLogLevelValue)
-		viper.SetDefault(defaultLogFormatKey, defaultLogFormatValue)
-		viper.SetDefault(defaultLogOutputKey, defaultLogOutputValue)
+		viper.SetDefault(defaultLogLevelKey, defaultLogConfig.Level)
+		viper.SetDefault(defaultLogFormatKey, defaultLogConfig.Format)
+		viper.SetDefault(defaultLogOutputKey, defaultLogConfig.Output)
 		return
 	}
 
 	// flags
-	cmd.PersistentFlags().String("log-level", defaultLogLevelValue, "log level")
-	cmd.PersistentFlags().String("log-format", defaultLogFormatValue, "log format")
-	cmd.PersistentFlags().String("log-output", defaultLogOutputValue, "log output")
+	cmd.PersistentFlags().String("log-level", defaultLogConfig.Level, "log level")
+	cmd.PersistentFlags().String("log-format", defaultLogConfig.Format, "log format")
+	cmd.PersistentFlags().String("log-output", defaultLogConfig.Output, "log output")
 
 	// bind
 	err := viper.BindPFlag(defaultLogLevelKey, cmd.PersistentFlags().Lookup("log-level"))
@@ -225,14 +230,4 @@ func Panic(msg string, fields ...zap.Field) {
 
 func Fatal(msg string, fields ...zap.Field) {
 	DefaultLogger.Fatal(msg, fields...)
-}
-
-// default logger
-var DefaultLogger, _ = defaultLogConfig.build()
-
-var defaultLogConfig = &LogConfig{
-	Level:     "info",
-	Format:    "console",
-	Output:    "stdout",
-	addCaller: true,
 }
