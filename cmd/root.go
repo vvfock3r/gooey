@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/spf13/viper"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/vvfock3r/gooey/kernel/load"
-	"github.com/vvfock3r/gooey/kernel/module/mysql"
 )
 
 var rootCmd = &cobra.Command{
@@ -30,18 +30,7 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		//for {
-		//	now := time.Now().Format(time.DateTime)
-		//	logger.Debug(now)
-		//	logger.Info(now)
-		//	logger.Warn(now)
-		//	logger.Error(now)
-		//	fmt.Println()
-		//	time.Sleep(time.Second)
-		//}
-		var v string
-		mysql.DB.Get(&v, "select @@version")
-		fmt.Println(v)
+		fmt.Println(viper.GetString("settings.log.level"))
 	},
 }
 

@@ -12,33 +12,78 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-var DefaultLogger *zap.Logger
-
 // Logger implement the Module interface
 type Logger struct {
+	AddFlag    bool
 	AddCaller  bool
 	Stacktrace zapcore.LevelEnabler
 }
 
-func (l *Logger) Register(*cobra.Command) {
-	viper.SetDefault("settings.log.Level", "info")
-	viper.SetDefault("settings.log.format", "console")
-	viper.SetDefault("settings.log.output", "stdout")
+func (l *Logger) Register(cmd *cobra.Command) {
+	var (
+		defaultLogLevelKey   = "settings.log.level"
+		defaultLogLevelValue = "debug"
+
+		defaultLogFormatKey   = "settings.log.format"
+		defaultLogFormatValue = "console"
+
+		defaultLogOutputKey   = "settings.log.output"
+		defaultLogOutputValue = "stdout"
+	)
+	if !l.AddFlag {
+		// default
+		viper.SetDefault(defaultLogLevelKey, defaultLogLevelValue)
+		viper.SetDefault(defaultLogFormatKey, defaultLogFormatValue)
+		viper.SetDefault(defaultLogOutputKey, defaultLogOutputValue)
+		return
+	}
+
+	// flags
+	cmd.PersistentFlags().String("log-level", defaultLogLevelValue, "log level")
+	cmd.PersistentFlags().String("log-format", defaultLogFormatValue, "log format")
+	cmd.PersistentFlags().String("log-output", defaultLogOutputValue, "log output")
+
+	// bind
+	err := viper.BindPFlag(defaultLogLevelKey, cmd.PersistentFlags().Lookup("log-level"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultLogFormatKey, cmd.PersistentFlags().Lookup("log-format"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultLogOutputKey, cmd.PersistentFlags().Lookup("log-output"))
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (l *Logger) MustCheck(*cobra.Command) {}
 
-func (l *Logger) Initialize(*cobra.Command) error {
+func (l *Logger) Initialize(cmd *cobra.Command) error {
 	logConfig := LogConfig{
+		Level:      viper.GetString("settings.log.level"),
+		Format:     viper.GetString("settings.log.format"),
+		Output:     viper.GetString("settings.log.output"),
 		addCaller:  l.AddCaller,
 		stacktrace: l.Stacktrace,
 	}
-	err := viper.Sub("settings.log").Unmarshal(&logConfig)
+
+	newLogger, err := logConfig.build()
 	if err != nil {
 		return err
 	}
 
-	return logConfig.setDefault()
+	if DefaultLogger != nil {
+		_ = DefaultLogger.Sync()
+		for _, file := range defaultLogConfig.preOutputFiles {
+			_ = file.Close()
+		}
+	}
+
+	DefaultLogger = newLogger
+
+	return nil
 }
 
 // LogConfig zap log config
@@ -54,36 +99,18 @@ type LogConfig struct {
 	curOutputFiles []*os.File
 }
 
-func (l *LogConfig) setDefault() error {
-	newLogger, err := l.newLogger()
-	if err != nil {
-		return err
-	}
-
-	if DefaultLogger != nil {
-		_ = DefaultLogger.Sync()
-		for _, file := range l.preOutputFiles {
-			_ = file.Close()
-		}
-	}
-
-	DefaultLogger = newLogger
-
-	return nil
-}
-
-func (l *LogConfig) newLogger() (*zap.Logger, error) {
-	level, err := l._newLevel()
+func (l *LogConfig) build() (*zap.Logger, error) {
+	level, err := l.level()
 	if err != nil {
 		return nil, err
 	}
 
-	encoder, err := l._newEncoder()
+	encoder, err := l.encoder()
 	if err != nil {
 		return nil, err
 	}
 
-	syncers, err := l._newOutput()
+	syncers, err := l.output()
 	if err != nil {
 		return nil, err
 	}
@@ -101,19 +128,18 @@ func (l *LogConfig) newLogger() (*zap.Logger, error) {
 	return logger, nil
 }
 
-func (l *LogConfig) _newLevel() (zap.AtomicLevel, error) {
+func (l *LogConfig) level() (zap.AtomicLevel, error) {
 	level, err := zapcore.ParseLevel(l.Level)
 	if err != nil {
-		unrecognized := "unrecognized Level: " + l.Level
+		unrecognized := "unrecognized log level: " + l.Level
 		supported := "supported values: debug,info,warn,error,dpanic,panic,fatal"
 		return zap.NewAtomicLevelAt(zapcore.InvalidLevel), fmt.Errorf(unrecognized + ", " + supported)
 	}
 	return zap.NewAtomicLevelAt(level), nil
 }
 
-func (l *LogConfig) _newEncoder() (zapcore.Encoder, error) {
+func (l *LogConfig) encoder() (zapcore.Encoder, error) {
 	// encoderConfig
-	zap.NewProductionEncoderConfig()
 	encoderConfig := zapcore.EncoderConfig{
 		TimeKey:          "time",
 		LevelKey:         "level",
@@ -139,13 +165,13 @@ func (l *LogConfig) _newEncoder() (zapcore.Encoder, error) {
 		encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 		return zapcore.NewConsoleEncoder(encoderConfig), nil
 	default:
-		unrecognized := "unrecognized format: " + l.Format
+		unrecognized := "unrecognized log format: " + l.Format
 		supported := "supported values: json,console"
 		return zapcore.NewConsoleEncoder(encoderConfig), fmt.Errorf(unrecognized + ", " + supported)
 	}
 }
 
-func (l *LogConfig) _newOutput() (zapcore.WriteSyncer, error) {
+func (l *LogConfig) output() (zapcore.WriteSyncer, error) {
 	var (
 		writeSyncers   []zapcore.WriteSyncer
 		newOutputFiles []*os.File
@@ -173,43 +199,40 @@ func (l *LogConfig) _newOutput() (zapcore.WriteSyncer, error) {
 	return zapcore.NewMultiWriteSyncer(writeSyncers...), nil
 }
 
-func check() {
-	if DefaultLogger == nil {
-		panic("logger not initialized, logger module needs to be added")
-	}
-}
-
 func Debug(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Debug(msg, fields...)
 }
 
 func Info(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Info(msg, fields...)
 }
 
 func Warn(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Warn(msg, fields...)
 }
 
 func Error(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Error(msg, fields...)
 }
 
 func DPanic(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.DPanic(msg, fields...)
 }
 
 func Panic(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Panic(msg, fields...)
 }
 
 func Fatal(msg string, fields ...zap.Field) {
-	check()
 	DefaultLogger.Fatal(msg, fields...)
+}
+
+// default logger
+var DefaultLogger, _ = defaultLogConfig.build()
+
+var defaultLogConfig = &LogConfig{
+	Level:     "info",
+	Format:    "console",
+	Output:    "stdout",
+	addCaller: true,
 }

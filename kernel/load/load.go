@@ -25,10 +25,16 @@ var ModuleList = []iface.Module{
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
+	//&logger.Logger{
+	//	AddFlag:   true,
+	//	AddCaller: true,
+	//},
 
 	// 具有依赖关系的模块,详情可以查看模块的import部分
-	&logger.Logger{AddCaller: true},
 	&maxprocs.AutoMaxProcs{},
-	&watch.Watch{List: []iface.Module{&logger.Logger{AddCaller: true}}},
-	&mysql.MySQL{AllowedCommands: []string{"gooey"}},
+	&watch.Watch{
+		List: []iface.Module{&logger.Logger{AddCaller: true}}},
+	&mysql.MySQL{
+		AllowedCommands: []string{"gooey"},
+	},
 }
