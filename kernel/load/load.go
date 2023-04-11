@@ -18,23 +18,28 @@ var ModuleList = []iface.Module{
 
 	// 独立的模块放
 	&version.Version{},
-	&help.Help{HiddenHelpCommand: true},
+	&help.Help{
+		HiddenShortFlag:   true,
+		HiddenHelpCommand: true,
+	},
 	&config.Config{
+		AddFlag:   false,
 		Name:      "etc/default",
 		Exts:      []string{"yaml"},
 		Path:      []string{".", "$HOME", "/etc"},
 		MustExist: false,
 	},
-	//&logger.Logger{
-	//	AddFlag:   true,
-	//	AddCaller: true,
-	//},
 
 	// 具有依赖关系的模块,详情可以查看模块的import部分
+	&logger.Logger{
+		AddFlag:   false,
+		AddCaller: true,
+	},
 	&maxprocs.AutoMaxProcs{},
 	&watch.Watch{
 		List: []iface.Module{&logger.Logger{AddCaller: true}}},
 	&mysql.MySQL{
+		AddFlag:         true,
 		AllowedCommands: []string{"gooey"},
 	},
 }

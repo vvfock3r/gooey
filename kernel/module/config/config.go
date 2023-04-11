@@ -11,6 +11,7 @@ import (
 // Config implement the Module interface
 type Config struct {
 	flag      string
+	AddFlag   bool
 	Name      string
 	Exts      []string
 	Path      []string
@@ -19,7 +20,9 @@ type Config struct {
 
 func (c *Config) Register(cmd *cobra.Command) {
 	// register flag -c / --config
-	cmd.PersistentFlags().StringVarP(&c.flag, "config", "c", "", "config file")
+	if c.AddFlag {
+		cmd.PersistentFlags().StringVarP(&c.flag, "config", "c", "", "config file")
+	}
 
 	// supported config extensions
 	viper.SupportedExts = c.Exts

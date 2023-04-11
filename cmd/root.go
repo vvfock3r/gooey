@@ -2,12 +2,12 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/viper"
 	"os"
 
 	"github.com/spf13/cobra"
 
 	"github.com/vvfock3r/gooey/kernel/load"
+	"github.com/vvfock3r/gooey/kernel/module/mysql"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,13 +15,13 @@ var rootCmd = &cobra.Command{
 	Short:         "Simple Command-Line Interface Template\nFor details, please refer to https://github.com/vvfock3r/gooey",
 	SilenceUsage:  true,
 	SilenceErrors: true,
-	PersistentPreRunE: func(cmd *cobra.Command, args []string) (err error) {
+	PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 		for _, m := range load.ModuleList {
 			m.MustCheck(cmd)
 		}
 
 		for _, m := range load.ModuleList {
-			err = m.Initialize(cmd)
+			err := m.Initialize(cmd)
 			if err != nil {
 				return err
 			}
@@ -30,7 +30,12 @@ var rootCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(viper.GetString("settings.log.level"))
+		var version string
+		err := mysql.DB.Get(&version, "select @@version")
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println(version)
 	},
 }
 

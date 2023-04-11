@@ -3,6 +3,8 @@ package mysql
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/go-sql-driver/mysql"
@@ -10,62 +12,191 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
+	"golang.org/x/crypto/ssh/terminal"
 
 	"github.com/vvfock3r/gooey/kernel/module/logger"
 )
 
 var DB *sqlx.DB
 
+var (
+	defaultHostKey   = "settings.mysql.host"
+	defaultHostValue = "127.0.0.1"
+
+	defaultPortKey   = "settings.mysql.port"
+	defaultPortValue = "3306"
+
+	defaultUserKey   = "settings.mysql.user"
+	defaultUserValue = "root"
+
+	defaultPasswordKey   = "settings.mysql.password"
+	defaultPasswordValue = ""
+
+	defaultDatabaseKey   = "settings.mysql.database"
+	defaultDatabaseValue = ""
+
+	defaultCharsetKey   = "settings.mysql.charset"
+	defaultCharsetValue = "utf8mb4"
+
+	defaultCollationKey   = "settings.mysql.collation"
+	defaultCollationValue = "utf8mb4_general_ci"
+
+	defaultConntimeoutKey   = "settings.mysql.connect_timeout"
+	defaultConntimeoutValue = "5s"
+
+	defaultReadtimeoutKey   = "settings.mysql.read_timeout"
+	defaultReadtimeoutValue = "30s"
+
+	defaultWritetimeoutKey   = "settings.mysql.write_timeout"
+	defaultWritetimeoutValue = "30s"
+
+	defaultMaxAllowedPacketKey   = "settings.mysql.max_allowed_packet"
+	defaultMaxAllowedPacketValue = "16MB"
+)
+
 // MySQL implement the Module interface
 type MySQL struct {
+	AddFlag         bool
 	AllowedCommands []string
 }
 
-func (m *MySQL) Register(*cobra.Command) {}
+func (m *MySQL) Register(cmd *cobra.Command) {
+	if !m.AddFlag {
+		// default
+		viper.SetDefault(defaultHostKey, defaultHostValue)
+		viper.SetDefault(defaultPortKey, defaultPortValue)
+		viper.SetDefault(defaultUserKey, defaultUserValue)
+		viper.SetDefault(defaultPasswordKey, defaultPasswordValue)
+		viper.SetDefault(defaultDatabaseKey, defaultDatabaseValue)
+		viper.SetDefault(defaultCharsetKey, defaultCharsetValue)
+		viper.SetDefault(defaultCollationKey, defaultCollationValue)
+		viper.SetDefault(defaultConntimeoutKey, defaultConntimeoutValue)
+		viper.SetDefault(defaultReadtimeoutKey, defaultReadtimeoutValue)
+		viper.SetDefault(defaultWritetimeoutKey, defaultWritetimeoutValue)
+		viper.SetDefault(defaultMaxAllowedPacketKey, defaultMaxAllowedPacketValue)
+		return
+	}
+
+	// flags
+	cmd.PersistentFlags().StringP("host", "h", defaultHostValue, "mysql host")
+	cmd.PersistentFlags().StringP("port", "P", defaultPortValue, "mysql port")
+	cmd.PersistentFlags().StringP("user", "u", defaultUserValue, "mysql user")
+	cmd.PersistentFlags().StringP("password", "p", defaultPasswordValue, "mysql password")
+	cmd.PersistentFlags().StringP("database", "d", defaultDatabaseValue, "mysql database")
+	cmd.PersistentFlags().String("charset", defaultCharsetValue, "mysql charset")
+	cmd.PersistentFlags().String("collation", defaultCollationValue, "mysql collation")
+	cmd.PersistentFlags().String("connect_timeout", defaultConntimeoutValue, "mysql connect timeout")
+	cmd.PersistentFlags().String("read_timeout", defaultReadtimeoutValue, "mysql read timeout")
+	cmd.PersistentFlags().String("write_timeout", defaultWritetimeoutValue, "mysql write timeout")
+	cmd.PersistentFlags().String("max_allowed_packet", defaultMaxAllowedPacketValue, "mysql max allowed packet")
+
+	// bind
+	err := viper.BindPFlag(defaultHostKey, cmd.PersistentFlags().Lookup("host"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultPortKey, cmd.PersistentFlags().Lookup("port"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultUserKey, cmd.PersistentFlags().Lookup("user"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultPasswordKey, cmd.PersistentFlags().Lookup("password"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultDatabaseKey, cmd.PersistentFlags().Lookup("database"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultCharsetKey, cmd.PersistentFlags().Lookup("charset"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultCollationKey, cmd.PersistentFlags().Lookup("collation"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultConntimeoutKey, cmd.PersistentFlags().Lookup("connect_timeout"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultReadtimeoutKey, cmd.PersistentFlags().Lookup("read_timeout"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultWritetimeoutKey, cmd.PersistentFlags().Lookup("write_timeout"))
+	if err != nil {
+		panic(err)
+	}
+	err = viper.BindPFlag(defaultMaxAllowedPacketKey, cmd.PersistentFlags().Lookup("max_allowed_packet"))
+	if err != nil {
+		panic(err)
+	}
+}
 
 func (m *MySQL) MustCheck(*cobra.Command) {}
 
 func (m *MySQL) Initialize(cmd *cobra.Command) error {
-	// 判断命令是否需要加载数据库
+	// allow connection to database
 	if !m.allow(cmd) {
 		return nil
 	}
 
-	// 提取子树
-	v := viper.Sub("settings.mysql")
-	if v == nil {
-		return fmt.Errorf("miss settings.mysql")
+	// enable interactive password
+	if strings.TrimSpace(viper.GetString(defaultPasswordKey)) == "" {
+		fmt.Print("Password: ")
+		password, err := terminal.ReadPassword(int(os.Stdin.Fd()))
+		if err != nil {
+			panic(err)
+		}
+		viper.Set(defaultPasswordKey, password)
 	}
 
-	// 生成配置
-	v.SetDefault("port", "3306")
-	v.SetDefault("charset", "utf8mb4")
-	v.SetDefault("collation", "utf8mb4_general_ci")
+	// long parameter
+	addr := viper.GetString(defaultHostKey) + ":" + viper.GetString(defaultPortKey)
+	params := map[string]string{"charset": viper.GetString(defaultCharsetKey)}
+
+	// max_allowed_packet
+	packet := strings.ToLower(viper.GetString(defaultMaxAllowedPacketKey))
+	if !strings.HasSuffix(packet, "mb") {
+		logger.Error("the max_allowed_packet parameter must specify the mb unit")
+		os.Exit(1)
+	}
+	maxAllowedPacketMB, err := strconv.Atoi(strings.TrimSuffix(packet, "mb"))
+	if err != nil {
+		logger.Error("the max_allowed_packet parameter type conversion failed")
+		os.Exit(1)
+	}
+
+	// build configuration
 	mysqlConfig := mysql.Config{
-		User:                 v.GetString("username"),
-		Passwd:               v.GetString("password"),
+		User:                 viper.GetString(defaultUserKey),
+		Passwd:               viper.GetString(defaultPasswordKey),
 		Net:                  "tcp",
-		Addr:                 v.GetString("host") + ":" + v.GetString("port"),
-		DBName:               v.GetString("dbname"),
-		Params:               map[string]string{"charset": v.GetString("charset")},
-		Collation:            v.GetString("collation"),
+		Addr:                 addr,
+		DBName:               viper.GetString(defaultDatabaseKey),
+		Params:               params,
+		Collation:            viper.GetString(defaultCollationKey),
 		Loc:                  time.Local,
 		ParseTime:            true,
-		Timeout:              v.GetDuration("conntimeout"),
-		ReadTimeout:          v.GetDuration("readtimeout"),
-		WriteTimeout:         v.GetDuration("writetimeout"),
+		Timeout:              viper.GetDuration(defaultConntimeoutKey),
+		ReadTimeout:          viper.GetDuration(defaultReadtimeoutKey),
+		WriteTimeout:         viper.GetDuration(defaultWritetimeoutKey),
 		CheckConnLiveness:    true,
 		AllowNativePasswords: true,
-		MaxAllowedPacket:     16 << 20, // 16 MiB
+		MaxAllowedPacket:     maxAllowedPacketMB << 20, // N MiB
 	}
 
-	// 替换go-sql-driver/mysql内部的Logger
-	err := mysql.SetLogger(&mysqlLogger{logger: logger.DefaultLogger})
+	// replace the Logger inside go-sql-driver/mysql
+	err = mysql.SetLogger(&mysqlLogger{logger: logger.DefaultLogger})
 	if err != nil {
 		panic(err)
 	}
 
-	// 连接数据库
+	// connect to the database
 	db, err := sqlx.Connect("mysql", mysqlConfig.FormatDSN())
 	if err != nil {
 		logger.Error("connect database error", zap.Error(err))
@@ -73,12 +204,12 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 	}
 	logger.Info("connect database success")
 
-	// 设置连接池
+	// set up connection pool
 	db.SetMaxOpenConns(100)
 	db.SetMaxIdleConns(10)
 	db.SetConnMaxIdleTime(time.Second * 300)
 
-	// 赋值给全局DB
+	// global DB
 	DB = db
 
 	return nil

@@ -3,17 +3,21 @@ settings:
   # format: 日志格式，支持 console,json
   # output: 输出位置，支持 stdout,stderr 或任意文件名，多个输出使用逗号分割
   log:
-    level: info
+    level: warn
     format: console
     output: stdout
+
+  # 时间类参数支持s/m/h作为单位,分别代表Second/Minute/Hour,不区分大小写
+  # max_allowed_packet仅支持MB作为单位,不区分大小写
   mysql:
     host: 192.168.48.129
     port: 3306
-    username: root
+    user: root
     password: QiNqg[l.%;H>>rO9
-    dbname: demo
+    database: demo
     charset: utf8mb4
     collation: utf8mb4_general_ci
-    conntimeout: 1s
-    readtimeout: 3s
-    writetimeout: 3s
+    connect_timeout: 5s
+    read_timeout: 30s
+    write_timeout: 30s
+    max_allowed_packet: 16MB

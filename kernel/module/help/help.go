@@ -9,6 +9,7 @@ import (
 
 // Help implement the Module interface
 type Help struct {
+	HiddenShortFlag   bool
 	HiddenHelpCommand bool
 }
 
@@ -23,11 +24,15 @@ func (h *Help) Register(cmd *cobra.Command) {
 		os.Exit(0)
 	})
 
+	if h.HiddenShortFlag {
+		cmd.PersistentFlags().Bool("help", false, "help message")
+	} else {
+		cmd.PersistentFlags().BoolP("help", "h", false, "help message")
+	}
+
 	if h.HiddenHelpCommand {
 		cmd.SetHelpCommand(&cobra.Command{Use: "no-help", Hidden: true})
 	}
-
-	cmd.PersistentFlags().BoolP("help", "h", false, "help message")
 }
 
 func (h *Help) MustCheck(*cobra.Command) {}
