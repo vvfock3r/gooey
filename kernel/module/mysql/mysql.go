@@ -147,11 +147,12 @@ func (m *MySQL) Initialize(cmd *cobra.Command) error {
 
 	// enable interactive password
 	if strings.TrimSpace(viper.GetString(defaultPasswordKey)) == "" {
-		fmt.Print("Password: ")
+		fmt.Printf("Password: ")
 		password, err := terminal.ReadPassword(int(os.Stdin.Fd()))
 		if err != nil {
 			panic(err)
 		}
+		fmt.Println()
 		viper.Set(defaultPasswordKey, password)
 	}
 

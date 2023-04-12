@@ -31,11 +31,11 @@ var rootCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		var version string
-		err := mysql.DB.Get(&version, "select @@version")
+		err := mysql.DB.Get(&version, "SELECT @@version")
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(version)
+		fmt.Printf("MySQL Version: %s\n", version)
 	},
 }
 
